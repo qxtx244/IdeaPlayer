@@ -1,0 +1,103 @@
+// Copyright (C) 2016 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+apply plugin: 'com.android.library'
+apply from: 'constants.gradle'
+
+android {
+    compileSdkVersion project.ext.compileSdkVersion
+    buildToolsVersion project.ext.buildToolsVersion
+    defaultConfig {
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+        consumerProguardFiles 'proguard-rules.txt'
+        versionCode 1
+        versionName project.ext.releaseVersion
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+//            buildConfigField "boolean", "LOG_DEBUG", "false"
+//            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res', 'src/main/res/']
+            jniLibs.srcDirs = ['libs']
+        }
+        debug { assets.srcDirs = ['src/debug/assets', 'src/debug/assets/'] }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    implementation 'com.android.support:support-annotations:' + supportLibraryVersion
+    implementation 'com.android.support:support-media-compat:' + supportLibraryVersion
+    compileOnly 'org.checkerframework:checker-qual:' + checkerframeworkVersion
+    //ima support
+    //    implementation 'com.google.ads.interactivemedia.v3:interactivemedia:3.8.7'
+    compileOnly 'com.google.android.gms:play-services-ads:' + playServicesLibraryVersion
+    compileOnly 'com.android.support:support-v4:' + supportLibraryVersion
+    compileOnly 'com.android.support:customtabs:' + supportLibraryVersion
+    compileOnly 'net.butterflytv.utils:rtmp-client:3.0.1'
+    //    implementation 'com.google.protobuf:protobuf-java:3.6.1'
+    //    implementation 'com.google.protobuf:protobuf-java-util:3.6.1'
+}
+
+afterEvaluate {
+    assembleRelease.doLast {
+        rename('-release')
+        delete(getSubPath() + getLibName() + '-release' + AARsuffix())
+    }
+
+    assembleDebug.doLast {
+        rename('-debug')
+        delete(getSubPath() + getLibName() + '-debug' + AARsuffix())
+    }
+}
+
+def getLibName() {
+    return getName()
+}
+static def getSubPath(){
+    return 'build/outputs/aar/'
+}
+
+static def outputsPath() {
+    return 'build/outputs/'
+}
+
+static def AARsuffix() {
+    return '.aar'
+}
+
+static def JARsuffix() {
+    return '.jar'
+}
+def rename(String type) {
+    copy {
+        from(getSubPath() + getName() + type + AARsuffix())
+        into(outputsPath()) rename {
+            getLibName() + new Date().format('_yyyyMMddhhmmss') + type + AARsuffix()
+        }
+    }
+
+    copy {
+        from('build/intermediates/bundles/' + type.substring(1) + '/classes.jar')
+        into(outputsPath()) rename {
+            getLibName() + new Date().format('_yyyyMMddhhmmss') + type + JARsuffix()
+        }
+    }
+}

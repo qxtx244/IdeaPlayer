@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/exo_controller"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/exo_title"
+        android:text="@string/app_name"
+        android:textSize="24dp"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:background="#69696969"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:id="@+id/exo_titleRight"
+        android:textSize="16sp"
+        android:textColor="#00ff00"
+        android:gravity="bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"/>
+
+    <!--当前播放进度-->
+    <TextView
+        android:id="@+id/exo_position"
+        android:textSize="22dp"
+        android:text = "00:00:00"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"/>
+
+    <!--总时长-->
+    <TextView
+        android:id="@+id/exo_duration"
+        android:textSize="22dp"
+        android:text="00:00:00"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/exo_position"
+        android:layout_alignBottom="@id/exo_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+
+    <!--进度条-->
+    <com.google.android.exoplayer2.ui.DefaultTimeBar
+        android:id="@+id/exo_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/exo_position"
+        android:layout_alignBottom="@id/exo_position"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_toLeftOf="@id/exo_duration"
+        android:layout_toRightOf="@id/exo_position"
+
+        app:scrubber_dragged_size="20dp"
+        app:scrubber_disabled_size="5dp"
+        app:scrubber_enabled_size="10dp"
+        app:scrubber_drawable="@mipmap/exo_pointer"
+        app:played_color="#33b5e5"
+        app:unplayed_color="#ffffff"
+        app:buffered_color="#7733b5e5"/>
+
+    <LinearLayout
+        android:id="@+id/exo_control"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/exo_progress"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/exo_prev"
+            android:src="@mipmap/exo_prev"
+            android:background="@null"
+            android:padding="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/exo_play"
+            android:src="@mipmap/exo_pause"
+            android:background="@null"
+            android:padding="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/exo_pause"
+            android:src="@mipmap/exo_play"
+            android:background="@null"
+            android:padding="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/exo_next"
+            android:src="@mipmap/exo_next"
+            android:background="@null"
+            android:padding="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

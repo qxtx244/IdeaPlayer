@@ -1,0 +1,51 @@
+apply plugin: 'com.android.application'
+apply from: '../constants.gradle'
+
+def getDate() {
+    return new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("GMT+08:00"))
+}
+
+android {
+    compileSdkVersion project.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "org.qxtx.idea.player.demo"
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+        versionCode project.ext.versionCode
+        versionName project.ext.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                def fileName = "visioncrypt-TEST_" + "${getDate()}" + ".apk"
+                outputFileName = fileName
+            }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:' + supportLibraryVersion
+    implementation 'com.android.support:recyclerview-v7:' + supportLibraryVersion
+    implementation project(':player')
+
+    testImplementation 'junit:junit:' + junitVersion
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:' + testEspressoCore, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestImplementation 'com.android.support.test:runner:' + testRunner
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:' + uiAutomator
+
+}
